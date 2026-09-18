@@ -1,23 +1,23 @@
 Architectures: iphoneos-arm iphoneos-arm64
 Codename: ios
 Components: main
-Date: Fri, 18 Sep 2026 03:37:00 +0000
+Date: Fri, 18 Sep 2026 03:56:43 +0000
 Label: MefinRepo
 Origin: MefinRepo
 Suite: stable
 MD5Sum:
  d41d8cd98f00b204e9800998ecf8427e                0 Packages
- 9c3fb4420073e22047c3319e6290f28a               29 Packages.gz
- b12c82960ba4cbdd5a54c4fd7cd78d3e              161 Release
+ 4e6bb15b087a2bd599ec2ee69843b1e8               29 Packages.gz
+ 7179686c4c1a886641a6dcca125ced86              161 Release
 SHA1:
  da39a3ee5e6b4b0d3255bfef95601890afd80709                0 Packages
- 61399fd7a8a28edafcd76758824c0ca1090c60b6               29 Packages.gz
- dde8a66500158e44524264b058ce6e2bbe1d6482              161 Release
+ 8a47d29c1a343be69b93e40422e942116dd473c7               29 Packages.gz
+ af0e3892f58ae7255486c43c7184a1c579c4f851              161 Release
 SHA256:
  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855                0 Packages
- 4fa1bd6316b93de2f1b77b2f03f0bcaa7a8e41d692a1cab897c3ae9a49a97663               29 Packages.gz
- 3cb2971d9b72fa1e500e088666f41b2d18cf9b910b04acf5c0f768eed515cf6b              161 Release
+ a009e4c326222bd40f8352e6b22c368fc3ddbd1dcf5f70f6958fddf0d8b170a9               29 Packages.gz
+ bd8cfe28f5e2e178b08742d5a72736af0b23ea67853ef937b5c7ac69233a207a              161 Release
 SHA512:
  cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e                0 Packages
- 415c1658a83aa02b3eda10749811c28a4af107eb39d44464c8668864a6ac45b2442a005ac5dd2a0a3d807297838ac01e3d4db23b5de222bbcb14ca3e632d7956               29 Packages.gz
- c18d47da380d713baaf0380203ef7aa6d517e394114115c4db43e1571a2d437fcd36df78200f74ca12cfa4b3468f4c37674baf2eeda60ab2ed0ff427f6fdf7da              161 Release
+ d7e53c3e508b3db2bae3b3464679b312ee4475cd8cfa5a8b9df5a16060d83c6a64c91bcfbb2d72f4599363a74d005b754f9abde52f785e7644c5f74a1b1b948c               29 Packages.gz
+ bf72335b7bff70a09b034a32cd9e90c58a4ff9e64a445d4a5ec7837fe635a0803f9e3c7745e2ffd0930a628022975df00b34deef4a62d5717885bcc60bcc449b              161 Release
