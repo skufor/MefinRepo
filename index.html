@@ -171,6 +171,94 @@
       border-color: rgba(255,255,255,.18);
     }
 
+    .packages-section {
+      margin-top: 72px;
+      text-align: left;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -.045em;
+    }
+
+    .section-note {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .package-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .package {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card);
+      backdrop-filter: blur(16px);
+    }
+
+    .package-name {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -.025em;
+    }
+
+    .package-description {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .package-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: #b8bdc9;
+      background: rgba(255,255,255,.035);
+      font-size: 12px;
+    }
+
+    .package-version {
+      align-self: center;
+      color: #d9dce5;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .empty {
+      padding: 34px 20px;
+      border: 1px dashed rgba(255,255,255,.14);
+      border-radius: 18px;
+      color: #858b99;
+      text-align: center;
+      background: rgba(255,255,255,.025);
+    }
+
     footer {
       margin-top: 72px;
       text-align: center;
@@ -184,6 +272,9 @@
       .repo code { padding: 13px 12px; }
       .grid { grid-template-columns: 1fr; }
       .links { flex-wrap: wrap; }
+      .section-head { align-items: start; }
+      .package { grid-template-columns: 1fr; }
+      .package-version { align-self: start; }
     }
   </style>
 </head>
@@ -223,6 +314,18 @@
       </article>
     </section>
 
+    <section class="packages-section" aria-labelledby="packages-title">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title" id="packages-title">Packages</h2>
+          <p class="section-note">Published packages are read directly from the APT index.</p>
+        </div>
+      </div>
+      <div class="package-list" id="package-list">
+        <div class="empty">Loading package catalog…</div>
+      </div>
+    </section>
+
     <footer>MefinRepo · Repository metadata is generated automatically.</footer>
   </main>
 
@@ -241,14 +344,65 @@
       }
     });
 
+    function parsePackages(text) {
+      return text.trim()
+        ? text.trim().split(/\n\s*\n/).map(block => {
+            const item = {};
+            for (const line of block.split("\n")) {
+              const match = line.match(/^([^:]+):\s?(.*)$/);
+              if (match) item[match[1]] = match[2];
+            }
+            return item;
+          })
+        : [];
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[char]));
+    }
+
     fetch("Packages", { cache: "no-store" })
       .then(r => r.ok ? r.text() : Promise.reject())
       .then(text => {
-        const count = (text.match(/^Package:\s/gm) || []).length;
-        document.getElementById("count").textContent = count === 1 ? "1 package" : count + " packages";
+        const packages = parsePackages(text);
+        document.getElementById("count").textContent =
+          packages.length === 1 ? "1 package" : packages.length + " packages";
+
+        const list = document.getElementById("package-list");
+
+        if (!packages.length) {
+          list.innerHTML = '<div class="empty">No packages published yet.</div>';
+          return;
+        }
+
+        list.innerHTML = packages.map(pkg => {
+          const name = escapeHtml(pkg.Package || "Unknown package");
+          const version = escapeHtml(pkg.Version || "Unknown version");
+          const arch = escapeHtml(pkg.Architecture || "unknown");
+          const size = pkg.Size ? Math.round(Number(pkg.Size) / 1024) + " KB" : "";
+          const description = escapeHtml(pkg.Description || "No description available.");
+
+          return `
+            <article class="package">
+              <div>
+                <h3 class="package-name">${name}</h3>
+                <p class="package-description">${description}</p>
+                <div class="package-meta">
+                  <span class="badge">${arch}</span>
+                  ${size ? `<span class="badge">${escapeHtml(size)}</span>` : ""}
+                </div>
+              </div>
+              <div class="package-version">v${version}</div>
+            </article>
+          `;
+        }).join("");
       })
       .catch(() => {
         document.getElementById("count").textContent = "Unavailable";
+        document.getElementById("package-list").innerHTML =
+          '<div class="empty">Package catalog is temporarily unavailable.</div>';
       });
   </script>
 </body>
