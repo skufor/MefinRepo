@@ -1,4 +1,4 @@
-name: Build APT repository
+name: Build and Deploy MefinRepo
 
 on:
   push:
@@ -11,10 +11,20 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +32,9 @@ jobs:
           fetch-depth: 0
 
       - name: Install APT tooling
-        run: sudo apt-get update && sudo apt-get install -y dpkg-dev apt-utils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev apt-utils
 
       - name: Build Packages indexes
         run: |
@@ -51,3 +63,15 @@ jobs:
             git commit -m "chore: rebuild APT metadata"
             git push
           fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
