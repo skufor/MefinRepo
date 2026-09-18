@@ -15,21 +15,35 @@ The repository metadata is generated automatically by GitHub Actions.
 ```
 MefinRepo/
 ├── pool/          # Published .deb packages
-├── icons/         # Package/repository icons
+├── icons/         # Repository/package icons
 ├── Packages       # APT package index
 ├── Packages.gz    # Compressed APT package index
 ├── Release        # APT repository metadata
 └── index.html     # Repository website
 ```
 
+## Website
+
+The repository website automatically reads `Packages` and displays the published package catalog, including:
+
+- package name
+- version
+- architecture
+- description
+- package size
+
+When new packages are published, the catalog updates automatically after the repository workflow finishes.
+
 ## Publishing packages
 
-Third-party `.deb` files are not copied into this repository automatically.
+Only packages for which redistribution is permitted should be published.
 
-Before a package is published, its original source and redistribution terms must be checked. Only packages that may legally be redistributed should be added to `pool/`.
+After a permitted `.deb` is added to `pool/`, GitHub Actions:
 
-After a package is added, GitHub Actions regenerates the APT indexes and deploys the updated repository.
+1. rebuilds `Packages` and `Packages.gz`;
+2. regenerates `Release` checksums;
+3. deploys the repository website and APT metadata to GitHub Pages.
 
 ## Status
 
-The repository infrastructure is ready. Packages will be added after their redistribution permissions have been verified.
+Repository infrastructure and automatic deployment are ready.
